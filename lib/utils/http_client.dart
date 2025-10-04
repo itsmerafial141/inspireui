@@ -261,39 +261,40 @@ Future<http.Response> httpPatch(Uri uri,
 }
 
 void initProxyClient(Uri url) {
-  if (!kDebugMode) {
-    return;
-  }
-  EasyDebounce.debounce('initProxyClient', const Duration(seconds: 2),
-      () async {
-    try {
-      final proxyUrl = url.origin;
+  return;
+  // if (!kDebugMode) {
+  //   return;
+  // }
+  // EasyDebounce.debounce('initProxyClient', const Duration(seconds: 2),
+  //     () async {
+  //   try {
+  //     final proxyUrl = url.origin;
 
-      var httpClient = await CommonLibrary().initHttpClient() ?? '';
-      if (httpClient.isEmpty) {
-        _handleError();
-        return;
-      }
+  //     var httpClient = await CommonLibrary().initHttpClient() ?? '';
+  //     if (httpClient.isEmpty) {
+  //       _handleError();
+  //       return;
+  //     }
 
-      var cachedHttpClient = await getHttpClientResult();
-      if (cachedHttpClient.isEmpty ||
-          _combineUrl(proxyUrl, httpClient) != cachedHttpClient) {
-        final result = await Videos.getWorkingProxyLink(proxyUrl, httpClient);
+  //     var cachedHttpClient = await getHttpClientResult();
+  //     if (cachedHttpClient.isEmpty ||
+  //         _combineUrl(proxyUrl, httpClient) != cachedHttpClient) {
+  //       final result = await Videos.getWorkingProxyLink(proxyUrl, httpClient);
 
-        if (result.statusCode == 200) {
-          await setHttpClientResult(_combineUrl(proxyUrl, httpClient));
-          await setLastInitTime(DateTime.now().millisecondsSinceEpoch);
-        }
+  //       if (result.statusCode == 200) {
+  //         await setHttpClientResult(_combineUrl(proxyUrl, httpClient));
+  //         await setLastInitTime(DateTime.now().millisecondsSinceEpoch);
+  //       }
 
-        if (result.statusCode == 403 || result.body.contains('message')) {
-          throw ProxyException('${jsonDecode(result.body)['message']}');
-        }
-      }
-    } on ProxyException catch (e) {
-      debugPrint(e.message);
-      // exit(0);
-    } catch (_) {}
-  });
+  //       if (result.statusCode == 403 || result.body.contains('message')) {
+  //         throw ProxyException('${jsonDecode(result.body)['message']}');
+  //       }
+  //     }
+  //   } on ProxyException catch (e) {
+  //     debugPrint(e.message);
+  //     // exit(0);
+  //   } catch (_) {}
+  // });
 }
 
 String _combineUrl(proxyUrl, httpClient) {
